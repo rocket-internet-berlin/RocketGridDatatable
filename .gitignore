@@ -1,0 +1,4 @@
+.idea
+.tsdrc
+node_modules/
+typings/

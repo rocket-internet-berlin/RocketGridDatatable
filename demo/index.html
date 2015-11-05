@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" ng-app="datatableDemo">
+<head>
+    <meta charset="UTF-8">
+    <title>Angular Grid Datatable Demo</title>
+</head>
+<body ng-controller="DemoCtrl as demoCtrl">
+    <angular-grid-datatable
+            data-data="demoCtrl.users"
+            data-service="Users">
+        <table>
+            <thead>
+            <tr>
+                <td>Name</td>
+                <td>Last name</td>
+            </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in demoCtrl.users">
+                    <td>{{user.name}}</td>
+                    <td>{{user.lastName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </angular-grid-datatable>
+
+    <script src="./../node_modules/angular/angular.js"></script>
+    <script src="./../node_modules/spin.js/spin.js"></script>
+    <script src="./../node_modules/angular-spinner/angular-spinner.js"></script>
+    <script src="./../node_modules/angular-paging/dist/paging.js"></script>
+    <script src="./../dist/angular-grid-datatable.js"></script>
+    <script>
+        angular.module('datatableDemo', [
+            'angular-grid-datatable'
+        ]).service('UsersPresentationService', ['$q', function ($q) {
+            return {
+                getAll: function () {
+                    var deferred = $q.defer();
+                    deferred.resolve([
+                        {name: 'Mike', lastName: 'Ross'},
+                        {name: 'Harvey', lastName: 'Specter'},
+                        {name: 'Robert', lastName: 'Zane'},
+                        {name: 'Jessica', lastName: 'Pearson'}
+                    ]);
+
+                    return deferred.promise;
+                },
+                getSorting: function () {
+                    // default can be first column
+                    return [{
+                        column: 0,
+                        direction: 'asc'
+                    }];
+                },
+                getLimit: function () {
+                    // todo
+                },
+                getOffset: function () {
+                    // todo
+                }
+            };
+        }]).controller('DemoCtrl', function () {});
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<div ng-show="scxDataTable.isLoading" class="transparent-cover"></div>
+
+<span us-spinner data-spinner-key="{{scxDataTable.uniqueKey}}"></span>
+
+<div class="scx-data-table" ng-transclude></div>
+
+<paging class="pull-right"
+        data-page="scxDataTable.currentPage"
+        data-paging-action="scxDataTable.pageChanged(page)"
+        data-page-size="scxDataTable.itemsPerPage"
+        data-total="scxDataTable.totalItems"
+        data-adjacent="1"
+        data-show-prev-next="true"
+        data-text-prev="Previous"
+        data-text-next="Next"
+        data-show-boundary-links="false"></paging>
+
+<div class="clearfix"></div>
+
