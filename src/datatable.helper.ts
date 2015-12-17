@@ -1,7 +1,7 @@
 'use strict';
 
-export const ASCENDING: string = 'asc';
-export const DESCENDING: string = 'desc';
+const ASCENDING: string = 'asc';
+const DESCENDING: string = 'desc';
 const SORTABLE_CLASS: string = 'sortable';
 const SORTABLE_CLASS_ASCENDING: string = 'sortable-' + ASCENDING;
 const SORTABLE_CLASS_DESCENDING: string = 'sortable-' + DESCENDING;
@@ -21,6 +21,7 @@ export class DataTableSortingHelper {
         if (0 === this.sortableColumns.length) {
             return;
         }
+
         this.sortableColumns.each((index: number, elem: Element) => {
             let column = angular.element(elem);
 
@@ -48,9 +49,7 @@ export class DataTableSortingHelper {
         // we need to remove all other sorting before proceeding
         th.parent()
             .find('th')
-            .filter((index: number, elem: Element) => {
-                return elem !== th.get(0);
-            })
+            .filter((index: number, elem: Element) => elem !== th.get(0))
             .each((index: number, elem: Element) => {
                 this.service.removeSorting(angular.element(elem).data('sort'));
                 angular.element(elem).removeClass(SORTABLE_CLASS_ASCENDING);

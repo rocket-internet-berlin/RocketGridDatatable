@@ -2,3 +2,4 @@
 .tsdrc
 node_modules/
 typings/
+demo/demo.js

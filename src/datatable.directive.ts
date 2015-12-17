@@ -29,12 +29,6 @@ interface IDataTableScope extends ng.IScope {
     scxDataTable: IDataTableScopeContent;
 }
 
-/**
- * @ngdoc directive
- * @name scxApp.directive:DataTableDirective
- * @description
- * # DataTableDirective
- */
 class DataTableDirective implements ng.IDirective {
     private service: angularGridDatatable.IPresentationService;
     private $scope: IDataTableScope;
@@ -47,7 +41,7 @@ class DataTableDirective implements ng.IDirective {
     }
 
     public linkFn ($scope: IDataTableScope, elem: ng.IAugmentedJQuery): void {
-        let sortableColumns = elem.find('.scx-data-table table thead th[data-sort]');
+        let sortableColumns = elem.find('.angular-grid-datatable table thead th[data-sort]');
 
         (new DataTableSortingHelper(
             sortableColumns,
@@ -85,7 +79,7 @@ class DataTableDirective implements ng.IDirective {
 
     private markAsLoading (scope: IDataTableScopeContent, asLoading: boolean = true): void {
         scope.isLoading = asLoading;
-        (asLoading)
+        asLoading
             ? this.usSpinnerService.spin(scope.uniqueKey)
             : this.usSpinnerService.stop(scope.uniqueKey);
     }
@@ -133,7 +127,8 @@ class DataTableDirective implements ng.IDirective {
 angular.module('angular-grid-datatable').directive('angularGridDatatable', [
     '$injector',
     'usSpinnerService',
-    ($injector: ng.auto.IInjectorService, usSpinnerService: ISpinnerService) => {
-        return new DataTableDirective($injector, usSpinnerService);
-    }
+    (
+        $injector: ng.auto.IInjectorService,
+        usSpinnerService: ISpinnerService
+    ) => new DataTableDirective($injector, usSpinnerService)
 ]);

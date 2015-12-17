@@ -3,12 +3,6 @@
 var datatable_helper_1 = require('./datatable.helper');
 exports.EVENT_REFRESH_DATA_TABLE_PREFIX = 'datatable-refresh-';
 exports.EVENT_PAGE_CHANGED_DATA_TABLE = 'datatable-page-changed';
-/**
- * @ngdoc directive
- * @name scxApp.directive:DataTableDirective
- * @description
- * # DataTableDirective
- */
 var DataTableDirective = (function () {
     function DataTableDirective($injector, usSpinnerService) {
         this.$injector = $injector;
@@ -16,7 +10,7 @@ var DataTableDirective = (function () {
         return this.create();
     }
     DataTableDirective.prototype.linkFn = function ($scope, elem) {
-        var sortableColumns = elem.find('.scx-data-table table thead th[data-sort]');
+        var sortableColumns = elem.find('.angular-grid-datatable table thead th[data-sort]');
         (new datatable_helper_1.DataTableSortingHelper(sortableColumns, this.service, $scope.scxDataTable.pageChanged)).initSorting();
     };
     DataTableDirective.prototype.controller = function ($scope) {
@@ -45,7 +39,7 @@ var DataTableDirective = (function () {
     DataTableDirective.prototype.markAsLoading = function (scope, asLoading) {
         if (asLoading === void 0) { asLoading = true; }
         scope.isLoading = asLoading;
-        (asLoading)
+        asLoading
             ? this.usSpinnerService.spin(scope.uniqueKey)
             : this.usSpinnerService.stop(scope.uniqueKey);
     };
@@ -81,7 +75,7 @@ var DataTableDirective = (function () {
         return directive;
     };
     return DataTableDirective;
-})();
+}());
 angular.module('angular-grid-datatable').directive('angularGridDatatable', [
     '$injector',
     'usSpinnerService',
@@ -92,11 +86,11 @@ angular.module('angular-grid-datatable').directive('angularGridDatatable', [
 
 },{"./datatable.helper":2}],2:[function(require,module,exports){
 'use strict';
-exports.ASCENDING = 'asc';
-exports.DESCENDING = 'desc';
+var ASCENDING = 'asc';
+var DESCENDING = 'desc';
 var SORTABLE_CLASS = 'sortable';
-var SORTABLE_CLASS_ASCENDING = 'sortable-' + exports.ASCENDING;
-var SORTABLE_CLASS_DESCENDING = 'sortable-' + exports.DESCENDING;
+var SORTABLE_CLASS_ASCENDING = 'sortable-' + ASCENDING;
+var SORTABLE_CLASS_DESCENDING = 'sortable-' + DESCENDING;
 /**
  * @description
  * # DataTableSortingHelper
@@ -121,7 +115,7 @@ var DataTableSortingHelper = (function () {
             });
             _this.service.getSorting().forEach(function (sortingElement) {
                 if (sortingElement.column === column.data('sort')) {
-                    column.addClass(sortingElement.direction === exports.ASCENDING
+                    column.addClass(sortingElement.direction === ASCENDING
                         ? SORTABLE_CLASS_ASCENDING
                         : SORTABLE_CLASS_DESCENDING);
                 }
@@ -134,16 +128,14 @@ var DataTableSortingHelper = (function () {
         // we need to remove all other sorting before proceeding
         th.parent()
             .find('th')
-            .filter(function (index, elem) {
-            return elem !== th.get(0);
-        })
+            .filter(function (index, elem) { return elem !== th.get(0); })
             .each(function (index, elem) {
             _this.service.removeSorting(angular.element(elem).data('sort'));
             angular.element(elem).removeClass(SORTABLE_CLASS_ASCENDING);
             angular.element(elem).removeClass(SORTABLE_CLASS_DESCENDING);
         });
         if (th.hasClass(SORTABLE_CLASS_ASCENDING)) {
-            this.service.addSorting(columnName, exports.DESCENDING);
+            this.service.addSorting(columnName, DESCENDING);
             th.removeClass(SORTABLE_CLASS_ASCENDING);
             th.addClass(SORTABLE_CLASS_DESCENDING);
         }
@@ -152,26 +144,22 @@ var DataTableSortingHelper = (function () {
             th.removeClass(SORTABLE_CLASS_DESCENDING);
         }
         else {
-            this.service.addSorting(columnName, exports.ASCENDING);
+            this.service.addSorting(columnName, ASCENDING);
             th.addClass(SORTABLE_CLASS_ASCENDING);
         }
     };
     return DataTableSortingHelper;
-})();
+}());
 exports.DataTableSortingHelper = DataTableSortingHelper;
 
 },{}],3:[function(require,module,exports){
-'use strict';
-
-},{}],4:[function(require,module,exports){
-/// <reference path="../typings/tsd.d.ts" />
 'use strict';
 angular.module('angular-grid-datatable', [
     'angularSpinner',
     'bw.paging'
 ]);
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var module;
 try {
   module = angular.module('angular-grid-datatable');
@@ -185,7 +173,7 @@ module.run(['$templateCache', function ($templateCache) {
     '\n' +
     '<span us-spinner data-spinner-key="{{scxDataTable.uniqueKey}}"></span>\n' +
     '\n' +
-    '<div class="scx-data-table" ng-transclude></div>\n' +
+    '<div class="angular-grid-datatable" ng-transclude></div>\n' +
     '\n' +
     '<paging class="pull-right"\n' +
     '        data-page="scxDataTable.currentPage"\n' +
@@ -204,4 +192,4 @@ module.run(['$templateCache', function ($templateCache) {
 }]);
 
 
-},{}]},{},[4,3,2,1,5]);
+},{}]},{},[3,2,1,4]);
