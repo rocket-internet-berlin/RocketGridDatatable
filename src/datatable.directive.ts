@@ -113,7 +113,7 @@ class DataTableDirective implements ng.IDirective {
     private create () {
         let directive: ng.IDirective = {
             bindToController: true,
-            controller: ($scope: IDataTableScope) => this.controller($scope),
+            controller: ['$scope', ($scope: IDataTableScope) => this.controller($scope)],
             controllerAs: 'scxDataTable',
             link: ($scope: IDataTableScope, elem: ng.IAugmentedJQuery) => this.linkFn($scope, elem),
             restrict: 'E',

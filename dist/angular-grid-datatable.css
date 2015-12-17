@@ -1,0 +1,3 @@
+scx-data-table { display: block; position: relative; }
+scx-data-table table { width: 100% !important; }
+scx-data-table ul.pagination { margin: 10px 11px 10px 0; }
