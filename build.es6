@@ -19,6 +19,7 @@ exec('./node_modules/.bin/tsd install', (error) => {
         }
 
         let outFile = 'dist/' + pkgName + '.js';
+        let outFileMinified = 'dist/' + pkgName + '.min.js';
         let files = [
             'dist/temporary/datatable.module.js',
             'dist/temporary/datatable.interface.js',
@@ -27,25 +28,25 @@ exec('./node_modules/.bin/tsd install', (error) => {
             'dist/temporary/tmpl.js'
         ];
 
-        exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m angular-grid-datatable', function (error, data) {
+        exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m angular-grid-datatable', (error, data) => {
             fs.writeFileSync('dist/temporary/tmpl.js', data.replace('src/', ''));
 
+            var bundleFs = fs.createWriteStream(outFile);
+
             browserify(files)
-                //.transform('babelify', {
-                //    presets: [
-                //        'es2015'
-                //    ]
-                //})
-                .bundle(() => {
-                    removeTemporaryItems(files, 'dist/temporary/');
-                })
-                .pipe(fs.createWriteStream(outFile));
+                .bundle(() => removeTemporaryItems(files, 'dist/temporary/'))
+                .pipe(bundleFs);
+
+            bundleFs.on('finish', () => {
+                var minified = uglifyJs.minify(outFile);
+                fs.writeFileSync(outFileMinified, minified.code);
+            });
         });
     });
 });
 
 function removeTemporaryItems(files, dir) {
-    files.forEach(function (item) {
+    files.forEach((item) => {
         fs.unlink(item, (error) => error ? console.log('remove file error: ', error) : null);
     });
     fs.rmdir(dir, (error) => error ? console.log('remove directory error: ', error) : null);

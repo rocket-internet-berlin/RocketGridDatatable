@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Angular Grid Datatable Demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./../dist/angular-grid-datatable.css">
 </head>
 <body ng-controller="DemoCtrl as demoCtrl">
+    <h1>Angular Grid Datatable</h1>
     <angular-grid-datatable
             data-data="demoCtrl.users"
             data-service="Users">
-        <table>
+        <table class="table table-striped table-bordered">
             <thead>
             <tr>
-                <td>Name</td>
-                <td>Last name</td>
+                <th>Name</th>
+                <th>Last name</th>
             </tr>
             </thead>
             <tbody>
