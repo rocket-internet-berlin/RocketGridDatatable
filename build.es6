@@ -21,7 +21,6 @@ exec('./node_modules/.bin/tsd install', (error) => {
         let outFile = 'dist/' + pkgName + '.js';
         let files = [
             'dist/temporary/datatable.module.js',
-            'dist/temporary/datatable.interface.js',
             'dist/temporary/datatable.helper.js',
             'dist/temporary/datatable.directive.js',
             'dist/temporary/tmpl.js'

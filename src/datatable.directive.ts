@@ -1,6 +1,5 @@
 'use strict';
 
-import { IDataTableResponse, IPresentationService } from './datatable.interface';
 import { DataTableSortingHelper } from './datatable.helper';
 
 export const EVENT_REFRESH_DATA_TABLE_PREFIX: string = 'datatable-refresh-';
@@ -12,7 +11,7 @@ interface IDataTableScopeContent {
 
     // initial scope
     additionalQueryParameters: {};
-    data: IDataTableResponse<any>;
+    data: angularGridDatatable.IDataTableResponse<any>;
     serviceName: string;
 
     // other scope properties
@@ -37,7 +36,7 @@ interface IDataTableScope extends ng.IScope {
  * # DataTableDirective
  */
 class DataTableDirective implements ng.IDirective {
-    private service: IPresentationService;
+    private service: angularGridDatatable.IPresentationService;
     private $scope: IDataTableScope;
 
     constructor (
@@ -100,7 +99,7 @@ class DataTableDirective implements ng.IDirective {
             (page - 1) * this.service.getLimit(),
             additionalQueryParameters
         ).then(
-            (payload: IDataTableResponse<any>) => {
+            (payload: angularGridDatatable.IDataTableResponse<any>) => {
                 scopeContent.data = payload;
                 scopeContent.totalItems = payload.recordsTotal;
             }
