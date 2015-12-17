@@ -6,34 +6,41 @@ let uglifyJs = require('uglifyjs');
 let fs = require('fs');
 let pkgName = require('./package.json').name;
 
-exec('./node_modules/.bin/tsc', (error) => {
+exec('./node_modules/.bin/tsd install', (error) => {
     if (error) {
-        console.log('tsc error: ', error);
+        console.log('tsd install error: ', error);
         return;
     }
 
-    let outFile = 'dist/' + pkgName + '.js';
-    let files = [
-        'dist/temporary/datatable.module.js',
-        'dist/temporary/datatable.interface.js',
-        'dist/temporary/datatable.helper.js',
-        'dist/temporary/datatable.directive.js',
-        'dist/temporary/tmpl.js'
-    ];
+    exec('./node_modules/.bin/tsc', (error) => {
+        if (error) {
+            console.log('tsc error: ', error);
+            return;
+        }
 
-    exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m angular-grid-datatable', function (error, data) {
-        fs.writeFileSync('dist/temporary/tmpl.js', data.replace('src/', ''));
+        let outFile = 'dist/' + pkgName + '.js';
+        let files = [
+            'dist/temporary/datatable.module.js',
+            'dist/temporary/datatable.interface.js',
+            'dist/temporary/datatable.helper.js',
+            'dist/temporary/datatable.directive.js',
+            'dist/temporary/tmpl.js'
+        ];
 
-        browserify(files)
-            //.transform('babelify', {
-            //    presets: [
-            //        'es2015'
-            //    ]
-            //})
-            .bundle(() => {
-                removeTemporaryItems(files, 'dist/temporary/');
-            })
-            .pipe(fs.createWriteStream(outFile));
+        exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m angular-grid-datatable', function (error, data) {
+            fs.writeFileSync('dist/temporary/tmpl.js', data.replace('src/', ''));
+
+            browserify(files)
+                //.transform('babelify', {
+                //    presets: [
+                //        'es2015'
+                //    ]
+                //})
+                .bundle(() => {
+                    removeTemporaryItems(files, 'dist/temporary/');
+                })
+                .pipe(fs.createWriteStream(outFile));
+        });
     });
 });
 

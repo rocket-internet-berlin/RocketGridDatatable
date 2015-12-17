@@ -3,7 +3,8 @@
   "description": "Grid datatable for AngularJS.",
   "main": "index.js",
   "authors": [
-    "Konrad Cerny <konrad.cerny@rocket-internet.de>"
+    "Konrad Cerny <konrad.cerny@rocket-internet.de>",
+    "Florian Topf <florian.topf@rocket-internet.de>"
   ],
   "license": "MIT",
   "keywords": [
