@@ -6,8 +6,8 @@
     },
     "files": [
         "typings/tsd.d.ts",
+        "src/datatable.d.ts",
         "src/datatable.module.ts",
-        "src/datatable.interface.ts",
         "src/datatable.helper.ts",
         "src/datatable.directive.ts"
     ]

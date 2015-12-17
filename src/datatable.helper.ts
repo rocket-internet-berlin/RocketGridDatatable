@@ -1,10 +1,5 @@
 'use strict';
 
-import {
-    IPresentationService,
-    ISortingParameter
-} from './datatable.interface';
-
 export const ASCENDING: string = 'asc';
 export const DESCENDING: string = 'desc';
 const SORTABLE_CLASS: string = 'sortable';
@@ -18,7 +13,7 @@ const SORTABLE_CLASS_DESCENDING: string = 'sortable-' + DESCENDING;
 export class DataTableSortingHelper {
     constructor (
         protected sortableColumns: ng.IAugmentedJQuery,
-        protected service: IPresentationService,
+        protected service: angularGridDatatable.IPresentationService,
         protected pageChangedCallback: Function
     ) {}
 
@@ -35,7 +30,7 @@ export class DataTableSortingHelper {
                 this.pageChangedCallback();
             });
 
-            this.service.getSorting().forEach((sortingElement: ISortingParameter) => {
+            this.service.getSorting().forEach((sortingElement: angularGridDatatable.ISortingParameter) => {
                 if (sortingElement.column === column.data('sort')) {
                     column.addClass(
                         sortingElement.direction === ASCENDING
