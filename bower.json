@@ -1,0 +1,22 @@
+{
+  "name": "rocket-grid-datatable",
+  "description": "Grid datatable for AngularJS.",
+  "main": "index.js",
+  "authors": [
+    "Konrad Cerny <konrad.cerny@rocket-internet.de> and Florian Topf <florian.topf@rocket-internet.de>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "grid",
+    "datatable",
+    "pagination",
+    "angular",
+    "angularjs"
+  ],
+  "homepage": "https://github.com/rocket-internet-berlin/RocketGridDatatable",
+  "ignore": [
+    "node_modules",
+    "demo",
+    ".gitignore"
+  ]
+}
