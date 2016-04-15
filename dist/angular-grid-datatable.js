@@ -10,13 +10,15 @@ var DataTableDirective = (function () {
         return this.create();
     }
     DataTableDirective.prototype.linkFn = function ($scope, elem) {
-        var sortableColumns = elem.find('.angular-grid-datatable table thead th[data-sort]');
-        (new datatable_helper_1.DataTableSortingHelper(sortableColumns, this.service, $scope.scxDataTable.pageChanged)).initSorting();
+        var sortableColumns = elem.find('.grid-datatable table thead th[data-sort]');
+        (new datatable_helper_1.DataTableSortingHelper(sortableColumns, this.service, $scope.dataTable.pageChanged)).initSorting();
     };
     DataTableDirective.prototype.controller = function ($scope) {
         var _this = this;
         this.$scope = $scope;
-        var scopeContent = $scope.scxDataTable;
+        var scopeContent = $scope.dataTable;
+        scopeContent.isSearchAllowed = !!scopeContent.isSearchAllowed;
+        scopeContent.searchValue = '';
         this.service = this.$injector.get(scopeContent.serviceName + 'PresentationService');
         scopeContent.uniqueKey = scopeContent.uniqueKey || Math.random()
             .toString(36)
@@ -26,10 +28,13 @@ var DataTableDirective = (function () {
         scopeContent.itemsPerPage = this.service.getLimit();
         scopeContent.pageChanged = function (page) {
             _this.markAsLoading(scopeContent);
-            _this.changePage(scopeContent, page);
+            _this.changePage(scopeContent, page || 1);
         };
         // receive initial data
         scopeContent.pageChanged();
+        $scope.$watch('dataTable.searchValue', function () {
+            scopeContent.pageChanged(scopeContent.currentPage);
+        });
         $scope.$on(exports.EVENT_REFRESH_DATA_TABLE_PREFIX + scopeContent.uniqueKey, function (event, payload) {
             var page = (payload && 0 < payload.page) ? payload.page : scopeContent.currentPage;
             _this.markAsLoading(scopeContent);
@@ -47,7 +52,7 @@ var DataTableDirective = (function () {
         var _this = this;
         var additionalQueryParameters = {};
         angular.extend(additionalQueryParameters, scopeContent.additionalQueryParameters);
-        this.service.getAll(this.service.getSorting(), this.service.getLimit(), (page - 1) * this.service.getLimit(), additionalQueryParameters).then(function (payload) {
+        this.service.getAll(this.service.getSorting(), this.service.getLimit(), (page - 1) * this.service.getLimit(), this.hasSearch(scopeContent) ? scopeContent.searchValue : '', additionalQueryParameters).then(function (payload) {
             scopeContent.data = payload;
             scopeContent.totalItems = payload.recordsTotal;
         }).finally(function () {
@@ -55,17 +60,24 @@ var DataTableDirective = (function () {
             _this.$scope.$emit(exports.EVENT_PAGE_CHANGED_DATA_TABLE);
         });
     };
+    DataTableDirective.prototype.hasSearch = function (scopeContent) {
+        return scopeContent.isSearchAllowed && this.hasSearchMinValue(scopeContent.searchValue);
+    };
+    DataTableDirective.prototype.hasSearchMinValue = function (search) {
+        return !!search && search.length > 2;
+    };
     DataTableDirective.prototype.create = function () {
         var _this = this;
         var directive = {
             bindToController: true,
             controller: ['$scope', function ($scope) { return _this.controller($scope); }],
-            controllerAs: 'scxDataTable',
+            controllerAs: 'dataTable',
             link: function ($scope, elem) { return _this.linkFn($scope, elem); },
             restrict: 'E',
             scope: {
                 additionalQueryParameters: '=queryParameters',
                 data: '=data',
+                isSearchAllowed: '=search',
                 serviceName: '@service',
                 uniqueKey: '@uniqueKey',
             },
@@ -96,10 +108,10 @@ var SORTABLE_CLASS_DESCENDING = 'sortable-' + DESCENDING;
  * # DataTableSortingHelper
  */
 var DataTableSortingHelper = (function () {
-    function DataTableSortingHelper(sortableColumns, service, pageChangedCallback) {
+    function DataTableSortingHelper(sortableColumns, service, pageChangeCallback) {
         this.sortableColumns = sortableColumns;
         this.service = service;
-        this.pageChangedCallback = pageChangedCallback;
+        this.pageChangeCallback = pageChangeCallback;
     }
     DataTableSortingHelper.prototype.initSorting = function () {
         var _this = this;
@@ -111,7 +123,7 @@ var DataTableSortingHelper = (function () {
             column.addClass(SORTABLE_CLASS).on('click', function (event) {
                 event.preventDefault();
                 _this.updateClasses(angular.element(event.target));
-                _this.pageChangedCallback();
+                _this.pageChangeCallback();
             });
             _this.service.getSorting().forEach(function (sortingElement) {
                 if (sortingElement.column === column.data('sort')) {
@@ -169,17 +181,22 @@ try {
 
 module.run(['$templateCache', function ($templateCache) {
   $templateCache.put('datatable.directive.html',
-    '<div ng-show="scxDataTable.isLoading" class="transparent-cover"></div>\n' +
+    '<div ng-show="dataTable.isLoading" class="transparent-cover"></div>\n' +
     '\n' +
-    '<span us-spinner data-spinner-key="{{scxDataTable.uniqueKey}}"></span>\n' +
+    '<span us-spinner data-spinner-key="{{dataTable.uniqueKey}}"></span>\n' +
     '\n' +
-    '<div class="angular-grid-datatable" ng-transclude></div>\n' +
+    '<div class="grid-datatable grid-datatable__search" data-ng-show="true === dataTable.isSearchAllowed">\n' +
+    '    <label>\n' +
+    '        Search: <input class="grid-datatable__search__box" ng-model="dataTable.searchValue" type="text">\n' +
+    '    </label>\n' +
+    '</div>\n' +
+    '<div class="grid-datatable" ng-transclude></div>\n' +
     '\n' +
     '<paging class="pull-right"\n' +
-    '        data-page="scxDataTable.currentPage"\n' +
-    '        data-paging-action="scxDataTable.pageChanged(page)"\n' +
-    '        data-page-size="scxDataTable.itemsPerPage"\n' +
-    '        data-total="scxDataTable.totalItems"\n' +
+    '        data-page="dataTable.currentPage"\n' +
+    '        data-paging-action="dataTable.pageChanged(page)"\n' +
+    '        data-page-size="dataTable.itemsPerPage"\n' +
+    '        data-total="dataTable.totalItems"\n' +
     '        data-adjacent="1"\n' +
     '        data-show-prev-next="true"\n' +
     '        data-text-prev="Previous"\n' +

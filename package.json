@@ -1,5 +1,5 @@
 {
-  "name": "angular-grid-datatable",
+  "name": "rocket-grid-datatable",
   "version": "1.0.0",
   "description": "Grid datatable for AngularJS.",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rocket-internet-berlin/angular-grid-datatable.git"
+    "url": "git+https://github.com/rocket-internet-berlin/RocketGridDatatable.git"
   },
   "keywords": [
     "grid",
@@ -21,9 +21,9 @@
   "author": "Konrad Cerny <konrad.cerny@rocket-internet.de> and Florian Topf <florian.topf@rocket-internet.de>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rocket-internet-berlin/angular-grid-datatable/issues"
+    "url": "https://github.com/rocket-internet-berlin/RocketGridDatatable/issues"
   },
-  "homepage": "https://github.com/rocket-internet-berlin/angular-grid-datatable#readme",
+  "homepage": "https://github.com/rocket-internet-berlin/RocketGridDatatable#readme",
   "devDependencies": {
     "angular": "^1.4.8",
     "angular-paging": "^2.0.0",

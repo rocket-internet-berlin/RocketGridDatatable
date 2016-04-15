@@ -11,8 +11,12 @@ interface IDataTableScopeContent {
 
     // initial scope
     additionalQueryParameters: {};
-    data: angularGridDatatable.IDataTableResponse<any>;
+    data: rocketGridDatatable.IDataTableResponse<any>;
     serviceName: string;
+
+    // search
+    isSearchAllowed: boolean;
+    searchValue: string;
 
     // other scope properties
     isLoading: boolean;
@@ -26,11 +30,11 @@ interface IDataTableScopeContent {
 }
 
 interface IDataTableScope extends ng.IScope {
-    scxDataTable: IDataTableScopeContent;
+    dataTable: IDataTableScopeContent;
 }
 
 class DataTableDirective implements ng.IDirective {
-    private service: angularGridDatatable.IPresentationService;
+    private service: rocketGridDatatable.IPresentationService;
     private $scope: IDataTableScope;
 
     constructor (
@@ -41,18 +45,20 @@ class DataTableDirective implements ng.IDirective {
     }
 
     public linkFn ($scope: IDataTableScope, elem: ng.IAugmentedJQuery): void {
-        let sortableColumns = elem.find('.angular-grid-datatable table thead th[data-sort]');
+        let sortableColumns = elem.find('.grid-datatable table thead th[data-sort]');
 
         (new DataTableSortingHelper(
             sortableColumns,
             this.service,
-            $scope.scxDataTable.pageChanged
+            $scope.dataTable.pageChanged
         )).initSorting();
     }
 
     public controller ($scope: IDataTableScope): void {
         this.$scope = $scope;
-        let scopeContent: IDataTableScopeContent = $scope.scxDataTable;
+        let scopeContent: IDataTableScopeContent = $scope.dataTable;
+        scopeContent.isSearchAllowed = !!scopeContent.isSearchAllowed;
+        scopeContent.searchValue = '';
 
         this.service = <any>this.$injector.get(scopeContent.serviceName + 'PresentationService');
         scopeContent.uniqueKey = scopeContent.uniqueKey || Math.random()
@@ -63,11 +69,15 @@ class DataTableDirective implements ng.IDirective {
         scopeContent.itemsPerPage = this.service.getLimit();
         scopeContent.pageChanged = (page: number): void => {
             this.markAsLoading(scopeContent);
-            this.changePage(scopeContent, page);
+            this.changePage(scopeContent, page || 1);
         };
 
         // receive initial data
         scopeContent.pageChanged();
+
+        $scope.$watch('dataTable.searchValue', () => {
+            scopeContent.pageChanged(scopeContent.currentPage);
+        });
 
         $scope.$on(EVENT_REFRESH_DATA_TABLE_PREFIX + scopeContent.uniqueKey, (event, payload) => {
             let page: number = (payload && 0 < payload.page) ? payload.page : scopeContent.currentPage;
@@ -91,9 +101,10 @@ class DataTableDirective implements ng.IDirective {
             this.service.getSorting(),
             this.service.getLimit(),
             (page - 1) * this.service.getLimit(),
+            this.hasSearch(scopeContent) ? scopeContent.searchValue : '',
             additionalQueryParameters
         ).then(
-            (payload: angularGridDatatable.IDataTableResponse<any>) => {
+            (payload: rocketGridDatatable.IDataTableResponse<any>) => {
                 scopeContent.data = payload;
                 scopeContent.totalItems = payload.recordsTotal;
             }
@@ -103,16 +114,25 @@ class DataTableDirective implements ng.IDirective {
         });
     }
 
+    private hasSearch (scopeContent: IDataTableScopeContent) {
+        return scopeContent.isSearchAllowed && this.hasSearchMinValue(scopeContent.searchValue);
+    }
+
+    private hasSearchMinValue (search: string) {
+        return !!search && search.length > 2
+    }
+
     private create () {
         let directive: ng.IDirective = {
             bindToController: true,
             controller: ['$scope', ($scope: IDataTableScope) => this.controller($scope)],
-            controllerAs: 'scxDataTable',
+            controllerAs: 'dataTable',
             link: ($scope: IDataTableScope, elem: ng.IAugmentedJQuery) => this.linkFn($scope, elem),
             restrict: 'E',
             scope: {
                 additionalQueryParameters: '=queryParameters',
                 data: '=data',
+                isSearchAllowed: '=search',
                 serviceName: '@service',
                 uniqueKey: '@uniqueKey',
             },
@@ -124,7 +144,7 @@ class DataTableDirective implements ng.IDirective {
     }
 }
 
-angular.module('angular-grid-datatable').directive('angularGridDatatable', [
+angular.module('rocket-grid-datatable').directive('rocketGridDatatable', [
     '$injector',
     'usSpinnerService',
     (

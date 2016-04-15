@@ -1,12 +1,13 @@
 const DEFAULT_OFFSET = 0;
 
-export default class BasePresentationService implements angularGridDatatable.IPresentationService {
-    public items: ng.IPromise<angularGridDatatable.IDataTableResponse<any>>;
-    public service: angularGridDatatable.IDataTableService;
+export default class BasePresentationService implements rocketGridDatatable.IPresentationService {
+    public items: ng.IPromise<rocketGridDatatable.IDataTableResponse<any>>;
+    public service: rocketGridDatatable.IDataTableService;
 
     private limit: number;
     private offset: number = DEFAULT_OFFSET;
-    private sorting: angularGridDatatable.IGetAllSortingParameter = [];
+    private search: string;
+    private sorting: rocketGridDatatable.IGetAllSortingParameter = [];
 
     public constructor (paginationLimitPerPage: number) {
         this.limit = paginationLimitPerPage;
@@ -14,11 +15,13 @@ export default class BasePresentationService implements angularGridDatatable.IPr
     }
 
     public getAll (
-        sorting: angularGridDatatable.IGetAllSortingParameter,
+        sorting: rocketGridDatatable.IGetAllSortingParameter,
         limit: number,
         offset: number,
+        search: string,
         additionalQueryParameters: {}
-    ): ng.IPromise<angularGridDatatable.IDataTableResponse<any>> {
+    ): ng.IPromise<rocketGridDatatable.IDataTableResponse<any>> {
+        this.setSearch(search);
         this.setSorting(sorting);
         this.setLimit(limit);
         this.setOffset(offset);
@@ -27,6 +30,7 @@ export default class BasePresentationService implements angularGridDatatable.IPr
             this.getSorting(),
             this.getLimit(),
             this.getOffset(),
+            this.getSearch(),
             additionalQueryParameters
         );
 
@@ -35,30 +39,34 @@ export default class BasePresentationService implements angularGridDatatable.IPr
 
     public addSorting (columnName: string, direction: 'asc' | 'desc'): void {
         this.removeSorting(columnName);
-        let newSorting: angularGridDatatable.ISortingParameter = {
+        let newSorting: rocketGridDatatable.ISortingParameter = {
             column: columnName,
             direction: direction,
         };
 
-        let sorting: angularGridDatatable.IGetAllSortingParameter = this.getSorting();
+        let sorting: rocketGridDatatable.IGetAllSortingParameter = this.getSorting();
         sorting.push(newSorting);
 
         this.setSorting(sorting);
     }
 
     public removeSorting (columnName: string): void {
-        let newSorting = <angularGridDatatable.IGetAllSortingParameter>this.getSorting().filter(
-            (sortingParam: angularGridDatatable.ISortingParameter) => sortingParam.column !== columnName
+        let newSorting = <rocketGridDatatable.IGetAllSortingParameter>this.getSorting().filter(
+            (sortingParam: rocketGridDatatable.ISortingParameter) => sortingParam.column !== columnName
         );
 
         this.setSorting(newSorting);
     }
 
-    public getDefaultSorting (): angularGridDatatable.IGetAllSortingParameter {
+    public getDefaultSorting (): rocketGridDatatable.IGetAllSortingParameter {
         return [];
     }
 
-    public getSorting (): angularGridDatatable.IGetAllSortingParameter {
+    public getSearch (): string {
+        return this.search;
+    }
+
+    public getSorting (): rocketGridDatatable.IGetAllSortingParameter {
         return this.sorting;
     }
 
@@ -70,7 +78,11 @@ export default class BasePresentationService implements angularGridDatatable.IPr
         return 0 < this.offset ? this.offset : DEFAULT_OFFSET;
     }
 
-    private setSorting (sorting: angularGridDatatable.IGetAllSortingParameter): void {
+    private setSearch (search: string): void {
+        this.search = search;
+    }
+
+    private setSorting (sorting: rocketGridDatatable.IGetAllSortingParameter): void {
         this.sorting = sorting;
     }
 

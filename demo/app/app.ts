@@ -6,7 +6,7 @@ import UserService from './usersService';
 import UserPresentationService from './usersPresentationService';
 
 let datatableDemoApplication = angular.module('datatableDemo', [
-    'angular-grid-datatable',
+    'rocket-grid-datatable',
 ]);
 datatableDemoApplication.constant('paginationLimitPerPage', 5);
 datatableDemoApplication.service('UserService', UserService);

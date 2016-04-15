@@ -1,9 +1,20 @@
-angular-grid-datatable {
+rocket-grid-datatable {
   display: block;
   position: relative;
 
-  table {
-    width: 100% !important;
+  .grid-datatable {
+    &__search {
+      width: 100%;
+      text-align: right;
+
+      &__box {
+        margin-left: 10px;
+      }
+    }
+
+    table {
+      width: 100% !important;
+    }
   }
 
   ul.pagination {

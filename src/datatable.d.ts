@@ -1,4 +1,24 @@
-declare module angularGridDatatable {
+declare module rocketGridDatatable {
+    export interface IDataTableService {
+        getAll(
+            sort: IGetAllSortingParameter,
+            limit: number,
+            offset: number,
+            search: string,
+            additionalQueryParameters: {}
+        ): ng.IPromise<IDataTableResponse<any>>;
+    }
+
+    export interface IPresentationService extends IDataTableService {
+        getSorting(): IGetAllSortingParameter;
+        getLimit(): number;
+        getOffset(): number;
+        getSearch(): string;
+
+        removeSorting(columnName: string): void;
+        addSorting(columnName: string, direction: string): void;
+    }
+
     export interface IDataTableResponse<T> {
         items: T[];
         recordsTotal: number;
@@ -12,29 +32,4 @@ declare module angularGridDatatable {
     }
 
     export interface IGetAllSortingParameter extends Array<ISortingParameter> {}
-
-    export interface IDataTableService {
-        getAll(
-            sort: IGetAllSortingParameter,
-            limit: number,
-            offset: number,
-            additionalQueryParameters: {}
-        ): ng.IPromise<any>;
-    }
-
-    export interface IPresentationService {
-        getAll(
-            sort: IGetAllSortingParameter,
-            limit: number,
-            offset: number,
-            additionalQueryParameters: {}
-        );
-
-        getSorting(): IGetAllSortingParameter;
-        getLimit(): number;
-        getOffset(): number;
-
-        removeSorting(columnName: string): void;
-        addSorting(columnName: string, direction: string): void;
-    }
 }

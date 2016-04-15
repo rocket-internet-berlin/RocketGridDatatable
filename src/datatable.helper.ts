@@ -13,8 +13,8 @@ const SORTABLE_CLASS_DESCENDING: string = 'sortable-' + DESCENDING;
 export class DataTableSortingHelper {
     constructor (
         protected sortableColumns: ng.IAugmentedJQuery,
-        protected service: angularGridDatatable.IPresentationService,
-        protected pageChangedCallback: Function
+        protected service: rocketGridDatatable.IPresentationService,
+        protected pageChangeCallback: Function
     ) {}
 
     public initSorting (): void {
@@ -28,10 +28,10 @@ export class DataTableSortingHelper {
             column.addClass(SORTABLE_CLASS).on('click', (event: JQueryEventObject) => {
                 event.preventDefault();
                 this.updateClasses(angular.element(event.target));
-                this.pageChangedCallback();
+                this.pageChangeCallback();
             });
 
-            this.service.getSorting().forEach((sortingElement: angularGridDatatable.ISortingParameter) => {
+            this.service.getSorting().forEach((sortingElement: rocketGridDatatable.ISortingParameter) => {
                 if (sortingElement.column === column.data('sort')) {
                     column.addClass(
                         sortingElement.direction === ASCENDING

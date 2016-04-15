@@ -8,20 +8,20 @@ export default class UserPresentationService extends BasePresentationService {
         'UserService',
     ];
 
-    static defaultSorting: Array<angularGridDatatable.ISortingParameter> = [
+    static defaultSorting: Array<rocketGridDatatable.ISortingParameter> = [
         {
             column: 'email',
             direction: 'asc',
         },
     ];
 
-    constructor (paginationLimitPerPage: number, service: angularGridDatatable.IDataTableService) {
+    constructor (paginationLimitPerPage: number, service: rocketGridDatatable.IDataTableService) {
         super(paginationLimitPerPage);
 
         this.service = service;
     }
 
-    public getDefaultSorting (): angularGridDatatable.IGetAllSortingParameter {
+    public getDefaultSorting (): rocketGridDatatable.IGetAllSortingParameter {
         return UserPresentationService.defaultSorting;
     }
 }

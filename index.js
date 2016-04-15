@@ -1,2 +1,2 @@
-require('./dist/angular-grid-datatable.min.tpls.js');
-module.exports = 'angular-grid-datatable';
+require('./dist/rocket-grid-datatable.min.tpls.js');
+module.exports = 'rocket-grid-datatable';
