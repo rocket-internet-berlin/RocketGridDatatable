@@ -1,14 +1,19 @@
-<div ng-show="scxDataTable.isLoading" class="transparent-cover"></div>
+<div ng-show="dataTable.isLoading" class="transparent-cover"></div>
 
-<span us-spinner data-spinner-key="{{scxDataTable.uniqueKey}}"></span>
+<span us-spinner data-spinner-key="{{dataTable.uniqueKey}}"></span>
 
-<div class="angular-grid-datatable" ng-transclude></div>
+<div class="grid-datatable grid-datatable__search" data-ng-show="true === dataTable.isSearchAllowed">
+    <label>
+        Search: <input class="grid-datatable__search__box" ng-model="dataTable.searchValue" type="text">
+    </label>
+</div>
+<div class="grid-datatable" ng-transclude></div>
 
 <paging class="pull-right"
-        data-page="scxDataTable.currentPage"
-        data-paging-action="scxDataTable.pageChanged(page)"
-        data-page-size="scxDataTable.itemsPerPage"
-        data-total="scxDataTable.totalItems"
+        data-page="dataTable.currentPage"
+        data-paging-action="dataTable.pageChanged(page)"
+        data-page-size="dataTable.itemsPerPage"
+        data-total="dataTable.totalItems"
         data-adjacent="1"
         data-show-prev-next="true"
         data-text-prev="Previous"

@@ -30,7 +30,7 @@ exec('./node_modules/.bin/tsd install', (error) => {
             'dist/temporary/tmpl.js'
         ];
 
-        exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m angular-grid-datatable', (error, data) => {
+        exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m rocket-grid-datatable', (error, data) => {
             fs.writeFileSync('dist/temporary/tmpl.js', data.replace('src/', ''));
 
             var bundleFs = fs.createWriteStream(outFile);
@@ -52,7 +52,7 @@ exec('./node_modules/.bin/tsd install', (error) => {
         });
 
         exec(
-            './node_modules/.bin/lessc --clean-css src/datatable.less dist/angular-grid-datatable.min.css',
+            './node_modules/.bin/lessc --clean-css src/datatable.less dist/rocket-grid-datatable.min.css',
             error => {
                 if (error) {
                     console.log('less error: ', error);

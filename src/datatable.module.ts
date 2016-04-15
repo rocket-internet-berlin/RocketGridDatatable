@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angular-grid-datatable', [
+angular.module('rocket-grid-datatable', [
     'angularSpinner',
     'bw.paging'
 ]);
