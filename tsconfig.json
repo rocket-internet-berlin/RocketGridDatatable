@@ -5,7 +5,7 @@
         "outDir": "dist/temporary"
     },
     "files": [
-        "typings/tsd.d.ts",
+        "typings/main.d.ts",
         "src/datatable.d.ts",
         "src/datatable.module.ts",
         "src/datatable.helper.ts",
