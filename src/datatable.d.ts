@@ -1,11 +1,14 @@
 declare module angularGridDatatable {
     export interface IDataTableResponse<T> {
+        items: T[];
         recordsTotal: number;
+        offset: number;
+        limit: number;
     }
 
     export interface ISortingParameter {
         column: string;
-        direction: string;
+        direction: 'asc' | 'desc';
     }
 
     export interface IGetAllSortingParameter extends Array<ISortingParameter> {}

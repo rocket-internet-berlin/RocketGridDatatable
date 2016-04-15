@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Angular Grid Datatable Demo</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="./../dist/angular-grid-datatable.css">
+    <link rel="stylesheet" type="text/css" href="./../dist/angular-grid-datatable.min.css">
 </head>
 <body ng-controller="DemoCtrl as demoCtrl">
     <h1>Angular Grid Datatable</h1>
@@ -14,12 +14,12 @@
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th>Name</th>
+                <th width="50%">Name</th>
                 <th>Last name</th>
             </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="user in demoCtrl.users">
+                <tr ng-repeat="user in demoCtrl.users.items">
                     <td>{{user.name}}</td>
                     <td>{{user.lastName}}</td>
                 </tr>
@@ -32,37 +32,6 @@
     <script src="./../node_modules/angular-spinner/angular-spinner.js"></script>
     <script src="./../node_modules/angular-paging/dist/paging.js"></script>
     <script src="./../dist/angular-grid-datatable.js"></script>
-    <script>
-        angular.module('datatableDemo', [
-            'angular-grid-datatable'
-        ]).service('UsersPresentationService', ['$q', function ($q) {
-            return {
-                getAll: function () {
-                    var deferred = $q.defer();
-                    deferred.resolve([
-                        {name: 'Mike', lastName: 'Ross'},
-                        {name: 'Harvey', lastName: 'Specter'},
-                        {name: 'Robert', lastName: 'Zane'},
-                        {name: 'Jessica', lastName: 'Pearson'}
-                    ]);
-
-                    return deferred.promise;
-                },
-                getSorting: function () {
-                    // default can be first column
-                    return [{
-                        column: 0,
-                        direction: 'asc'
-                    }];
-                },
-                getLimit: function () {
-                    // todo
-                },
-                getOffset: function () {
-                    // todo
-                }
-            };
-        }]).controller('DemoCtrl', function () {});
-    </script>
+    <script src="./demo.js"></script>
 </body>
 </html>

@@ -3,8 +3,11 @@
 let exec = require('child_process').exec;
 let browserify = require('browserify');
 let uglifyJs = require('uglifyjs');
+let less = require('less');
 let fs = require('fs');
 let pkgName = require('./package.json').name;
+
+console.log('app build: started');
 
 exec('./node_modules/.bin/tsd install', (error) => {
     if (error) {
@@ -33,7 +36,13 @@ exec('./node_modules/.bin/tsd install', (error) => {
             var bundleFs = fs.createWriteStream(outFile);
 
             browserify(files)
-                .bundle(() => removeTemporaryItems(files, 'dist/temporary/'))
+                .bundle(() => {
+                    console.log('app build: removing temporary dirs for app');
+                    exec('rm -rf dist/temporary/');
+                    exec('cd ./demo && node build.es6 && cd ..', (error, data) => {
+                        console.log(data);
+                    });
+                })
                 .pipe(bundleFs);
 
             bundleFs.on('finish', () => {
@@ -41,12 +50,15 @@ exec('./node_modules/.bin/tsd install', (error) => {
                 fs.writeFileSync(outFileMinified, minified.code);
             });
         });
+
+        exec(
+            './node_modules/.bin/lessc --clean-css src/datatable.less dist/angular-grid-datatable.min.css',
+            error => {
+                if (error) {
+                    console.log('less error: ', error);
+                    return;
+                }
+            }
+        );
     });
 });
-
-function removeTemporaryItems(files, dir) {
-    files.forEach((item) => {
-        fs.unlink(item, (error) => error ? console.log('remove file error: ', error) : null);
-    });
-    fs.rmdir(dir, (error) => error ? console.log('remove directory error: ', error) : null);
-}
