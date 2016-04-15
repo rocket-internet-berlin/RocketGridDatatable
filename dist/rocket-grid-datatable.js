@@ -88,7 +88,7 @@ var DataTableDirective = (function () {
     };
     return DataTableDirective;
 }());
-angular.module('angular-grid-datatable').directive('angularGridDatatable', [
+angular.module('rocket-grid-datatable').directive('rocketGridDatatable', [
     '$injector',
     'usSpinnerService',
     function ($injector, usSpinnerService) {
@@ -166,7 +166,7 @@ exports.DataTableSortingHelper = DataTableSortingHelper;
 
 },{}],3:[function(require,module,exports){
 'use strict';
-angular.module('angular-grid-datatable', [
+angular.module('rocket-grid-datatable', [
     'angularSpinner',
     'bw.paging'
 ]);
@@ -174,9 +174,9 @@ angular.module('angular-grid-datatable', [
 },{}],4:[function(require,module,exports){
 var module;
 try {
-  module = angular.module('angular-grid-datatable');
+  module = angular.module('rocket-grid-datatable');
 } catch (e) {
-  module = angular.module('angular-grid-datatable', []);
+  module = angular.module('rocket-grid-datatable', []);
 }
 
 module.run(['$templateCache', function ($templateCache) {
