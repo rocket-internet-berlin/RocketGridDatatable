@@ -32,8 +32,8 @@
     "less": "^2.6.1",
     "less-plugin-clean-css": "^1.5.1",
     "ng-html2js": "^2.0.0",
-    "tsd": "^0.6.5",
     "typescript": "^1.8.10",
+    "typings": "^0.7.12",
     "uglifyjs": "^2.4.10"
   }
 }

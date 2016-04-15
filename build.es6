@@ -9,9 +9,9 @@ let pkgName = require('./package.json').name;
 
 console.log('app build: started');
 
-exec('./node_modules/.bin/tsd install', (error) => {
+exec('./node_modules/.bin/typings install', (error) => {
     if (error) {
-        console.log('tsd install error: ', error);
+        console.log('typings install error: ', error);
         return;
     }
 
