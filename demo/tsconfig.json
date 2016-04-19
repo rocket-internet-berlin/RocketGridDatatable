@@ -6,9 +6,9 @@
     },
     "files": [
         "../src/datatable.d.ts",
+        "../dist/basePresentationService.ts",
         "app/app.ts",
         "app/usersService.ts",
-        "app/basePresentationService.ts",
         "app/usersPresentationService.ts"
     ]
 }

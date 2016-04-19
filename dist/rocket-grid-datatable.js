@@ -1,11 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
-var datatable_helper_1 = require('./datatable.helper');
 exports.EVENT_REFRESH_DATA_TABLE_PREFIX = 'datatable-refresh-';
 exports.EVENT_PAGE_CHANGED_DATA_TABLE = 'datatable-page-changed';
+
+},{}],2:[function(require,module,exports){
+'use strict';
+var events_1 = require('../dist/events');
+var datatable_helper_1 = require('./datatable.helper');
 var DataTableDirective = (function () {
-    function DataTableDirective($injector, usSpinnerService) {
+    function DataTableDirective($injector, $timeout, usSpinnerService) {
         this.$injector = $injector;
+        this.$timeout = $timeout;
         this.usSpinnerService = usSpinnerService;
         return this.create();
     }
@@ -32,10 +37,24 @@ var DataTableDirective = (function () {
         };
         // receive initial data
         scopeContent.pageChanged();
-        $scope.$watch('dataTable.searchValue', function () {
-            scopeContent.pageChanged(scopeContent.currentPage);
+        var delay;
+        $scope.$watch('dataTable.searchValue', function (newValue, oldValue) {
+            if (delay !== undefined) {
+                _this.$timeout.cancel(delay);
+            }
+            delay = _this.$timeout(function () {
+                if (_this.hasSearch(scopeContent)) {
+                    scopeContent.pageChanged(scopeContent.currentPage);
+                }
+                else if (true === _this.hasSearchMinValue(oldValue) && false === _this.hasSearchMinValue(newValue)) {
+                    scopeContent.pageChanged(scopeContent.currentPage);
+                }
+            }, 300);
         });
-        $scope.$on(exports.EVENT_REFRESH_DATA_TABLE_PREFIX + scopeContent.uniqueKey, function (event, payload) {
+        $scope.$on('destroy', function () {
+            _this.$timeout.cancel(delay);
+        });
+        $scope.$on(events_1.EVENT_REFRESH_DATA_TABLE_PREFIX + scopeContent.uniqueKey, function (event, payload) {
             var page = (payload && 0 < payload.page) ? payload.page : scopeContent.currentPage;
             _this.markAsLoading(scopeContent);
             _this.changePage(scopeContent, page);
@@ -57,7 +76,7 @@ var DataTableDirective = (function () {
             scopeContent.totalItems = payload.recordsTotal;
         }).finally(function () {
             _this.markAsLoading(scopeContent, false);
-            _this.$scope.$emit(exports.EVENT_PAGE_CHANGED_DATA_TABLE);
+            _this.$scope.$emit(events_1.EVENT_PAGE_CHANGED_DATA_TABLE);
         });
     };
     DataTableDirective.prototype.hasSearch = function (scopeContent) {
@@ -77,7 +96,7 @@ var DataTableDirective = (function () {
             scope: {
                 additionalQueryParameters: '=queryParameters',
                 data: '=data',
-                isSearchAllowed: '=search',
+                isSearchAllowed: '=?search',
                 serviceName: '@service',
                 uniqueKey: '@uniqueKey',
             },
@@ -90,13 +109,14 @@ var DataTableDirective = (function () {
 }());
 angular.module('rocket-grid-datatable').directive('rocketGridDatatable', [
     '$injector',
+    '$timeout',
     'usSpinnerService',
-    function ($injector, usSpinnerService) {
-        return new DataTableDirective($injector, usSpinnerService);
+    function ($injector, $timeout, usSpinnerService) {
+        return new DataTableDirective($injector, $timeout, usSpinnerService);
     }
 ]);
 
-},{"./datatable.helper":2}],2:[function(require,module,exports){
+},{"../dist/events":1,"./datatable.helper":3}],3:[function(require,module,exports){
 'use strict';
 var ASCENDING = 'asc';
 var DESCENDING = 'desc';
@@ -164,14 +184,14 @@ var DataTableSortingHelper = (function () {
 }());
 exports.DataTableSortingHelper = DataTableSortingHelper;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 angular.module('rocket-grid-datatable', [
     'angularSpinner',
     'bw.paging'
 ]);
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var module;
 try {
   module = angular.module('rocket-grid-datatable');
@@ -209,4 +229,4 @@ module.run(['$templateCache', function ($templateCache) {
 }]);
 
 
-},{}]},{},[3,2,1,4]);
+},{}]},{},[1,4,3,2,5]);

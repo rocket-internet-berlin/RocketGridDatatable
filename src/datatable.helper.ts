@@ -1,7 +1,7 @@
 'use strict';
 
-const ASCENDING: string = 'asc';
-const DESCENDING: string = 'desc';
+const ASCENDING: 'asc' | 'desc' = 'asc';
+const DESCENDING: 'asc' | 'desc' = 'desc';
 const SORTABLE_CLASS: string = 'sortable';
 const SORTABLE_CLASS_ASCENDING: string = 'sortable-' + ASCENDING;
 const SORTABLE_CLASS_DESCENDING: string = 'sortable-' + DESCENDING;

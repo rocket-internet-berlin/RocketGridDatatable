@@ -7,6 +7,7 @@
     "files": [
         "typings/main.d.ts",
         "src/datatable.d.ts",
+        "dist/events.ts",
         "src/datatable.module.ts",
         "src/datatable.helper.ts",
         "src/datatable.directive.ts"
