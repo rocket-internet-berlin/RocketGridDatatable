@@ -10,13 +10,23 @@ declare module rocketGridDatatable {
     }
 
     export interface IPresentationService extends IDataTableService {
+        getAll(
+            sort: IGetAllSortingParameter,
+            limit: number,
+            offset: number,
+            search: string,
+            additionalQueryParameters: {}
+        ): ng.IPromise<IDataTableResponse<any>>;
+
+        getDefaultSorting(): IGetAllSortingParameter;
+
         getSorting(): IGetAllSortingParameter;
         getLimit(): number;
         getOffset(): number;
         getSearch(): string;
 
+        addSorting(columnName: string, direction: 'asc' | 'desc'): void;
         removeSorting(columnName: string): void;
-        addSorting(columnName: string, direction: string): void;
     }
 
     export interface IDataTableResponse<T> {

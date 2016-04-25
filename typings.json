@@ -3,7 +3,8 @@
   "version": false,
   "ambientDependencies": {
     "angular": "github:DefinitelyTyped/DefinitelyTyped/angularjs/angular.d.ts#16134c168d021351acb1673ee9659644fc58c424",
-    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#16134c168d021351acb1673ee9659644fc58c424",
-    "angular-spinner": "github:DefinitelyTyped/DefinitelyTyped/angular-spinner/angular-spinner.d.ts#16134c168d021351acb1673ee9659644fc58c424"
+    "angular-resource": "registry:dt/angular-resource#1.5.0+20160412142209",
+    "angular-spinner": "github:DefinitelyTyped/DefinitelyTyped/angular-spinner/angular-spinner.d.ts#16134c168d021351acb1673ee9659644fc58c424",
+    "jquery": "github:DefinitelyTyped/DefinitelyTyped/jquery/jquery.d.ts#16134c168d021351acb1673ee9659644fc58c424"
   }
 }

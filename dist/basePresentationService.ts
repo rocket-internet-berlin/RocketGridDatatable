@@ -1,6 +1,6 @@
 const DEFAULT_OFFSET = 0;
 
-export default class BasePresentationService implements rocketGridDatatable.IPresentationService {
+export class BasePresentationService implements rocketGridDatatable.IPresentationService {
     public items: ng.IPromise<rocketGridDatatable.IDataTableResponse<any>>;
     public service: rocketGridDatatable.IDataTableService;
 

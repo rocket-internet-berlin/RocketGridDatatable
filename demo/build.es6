@@ -16,11 +16,12 @@ exec('./../node_modules/.bin/tsc', (error, data) => {
 
     let bundleFs = fs.createWriteStream('demo.js');
     bundleFs.on('finish', () => {
+        console.log('demo build: cleaning');
         exec('rm -rf dist/');
         console.log('demo build: done');
     });
 
-    browserify(['dist/app.js'])
+    browserify(['dist/demo/app/app.js'])
         .bundle(() => {})
         .pipe(bundleFs);
 });

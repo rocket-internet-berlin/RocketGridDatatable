@@ -1,18 +1,11 @@
 'use strict';
 
-import BasePresentationService from './basePresentationService';
+import { BasePresentationService } from '../../dist/basePresentationService';
 
 export default class UserPresentationService extends BasePresentationService {
     static $inject: string[] = [
         'paginationLimitPerPage',
         'UserService',
-    ];
-
-    static defaultSorting: Array<rocketGridDatatable.ISortingParameter> = [
-        {
-            column: 'email',
-            direction: 'asc',
-        },
     ];
 
     constructor (paginationLimitPerPage: number, service: rocketGridDatatable.IDataTableService) {
@@ -22,6 +15,11 @@ export default class UserPresentationService extends BasePresentationService {
     }
 
     public getDefaultSorting (): rocketGridDatatable.IGetAllSortingParameter {
-        return UserPresentationService.defaultSorting;
+        return [
+            {
+                column: 'email',
+                direction: 'asc',
+            },
+        ];
     }
 }

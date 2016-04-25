@@ -1,9 +1,7 @@
 'use strict';
 
+import { EVENT_PAGE_CHANGED_DATA_TABLE, EVENT_REFRESH_DATA_TABLE_PREFIX } from '../dist/events';
 import { DataTableSortingHelper } from './datatable.helper';
-
-export const EVENT_REFRESH_DATA_TABLE_PREFIX: string = 'datatable-refresh-';
-export const EVENT_PAGE_CHANGED_DATA_TABLE: string = 'datatable-page-changed';
 
 interface IDataTableScopeContent {
     $promise: ng.IPromise<any>;
@@ -39,6 +37,7 @@ class DataTableDirective implements ng.IDirective {
 
     constructor (
         protected $injector: ng.auto.IInjectorService,
+        protected $timeout: ng.ITimeoutService,
         protected usSpinnerService: ISpinnerService
     ) {
         return this.create();
@@ -75,8 +74,20 @@ class DataTableDirective implements ng.IDirective {
         // receive initial data
         scopeContent.pageChanged();
 
-        $scope.$watch('dataTable.searchValue', () => {
-            scopeContent.pageChanged(scopeContent.currentPage);
+        let delay: ng.IPromise<any>;
+        let oldValue: string;
+        $scope.$watch('dataTable.searchValue', (newValue: string) => {
+            if (delay !== undefined) {
+                this.$timeout.cancel(delay);
+            }
+            delay = this.$timeout(() => {
+                if (this.hasSearch(scopeContent)) {
+                    scopeContent.pageChanged(scopeContent.currentPage);
+                } else if (true === this.hasSearchMinValue(oldValue) && false === this.hasSearchMinValue(newValue)) {
+                    scopeContent.pageChanged(scopeContent.currentPage);
+                }
+                oldValue = newValue;
+            }, 300);
         });
 
         $scope.$on(EVENT_REFRESH_DATA_TABLE_PREFIX + scopeContent.uniqueKey, (event, payload) => {
@@ -84,6 +95,10 @@ class DataTableDirective implements ng.IDirective {
 
             this.markAsLoading(scopeContent);
             this.changePage(scopeContent, page);
+        });
+
+        $scope.$on('destroy', () => {
+            this.$timeout.cancel(delay);
         });
     }
 
@@ -132,7 +147,7 @@ class DataTableDirective implements ng.IDirective {
             scope: {
                 additionalQueryParameters: '=queryParameters',
                 data: '=data',
-                isSearchAllowed: '=search',
+                isSearchAllowed: '=?search',
                 serviceName: '@service',
                 uniqueKey: '@uniqueKey',
             },
@@ -146,9 +161,11 @@ class DataTableDirective implements ng.IDirective {
 
 angular.module('rocket-grid-datatable').directive('rocketGridDatatable', [
     '$injector',
+    '$timeout',
     'usSpinnerService',
     (
         $injector: ng.auto.IInjectorService,
+        $timeout: ng.ITimeoutService,
         usSpinnerService: ISpinnerService
-    ) => new DataTableDirective($injector, usSpinnerService)
+    ) => new DataTableDirective($injector, $timeout, usSpinnerService)
 ]);

@@ -24,13 +24,15 @@ exec('./node_modules/.bin/typings install', (error) => {
         let outFile = 'dist/' + pkgName + '.js';
         let outFileMinified = 'dist/' + pkgName + '.min.js';
         let files = [
-            'dist/temporary/datatable.module.js',
-            'dist/temporary/datatable.helper.js',
-            'dist/temporary/datatable.directive.js',
+            'dist/temporary/dist/events.js',
+            'dist/temporary/src/datatable.module.js',
+            'dist/temporary/src/datatable.helper.js',
+            'dist/temporary/src/datatable.directive.js',
             'dist/temporary/tmpl.js'
         ];
 
         exec('./node_modules/.bin/ng-html2js src/datatable.directive.html -m rocket-grid-datatable', (error, data) => {
+            console.log('app build: nghtml2js done');
             fs.writeFileSync('dist/temporary/tmpl.js', data.replace('src/', ''));
 
             var bundleFs = fs.createWriteStream(outFile);
@@ -38,9 +40,10 @@ exec('./node_modules/.bin/typings install', (error) => {
             browserify(files)
                 .bundle(() => {
                     console.log('app build: removing temporary dirs for app');
-                    exec('rm -rf dist/temporary/');
-                    exec('cd ./demo && node build.es6 && cd ..', (error, data) => {
-                        console.log(data);
+                    exec('rm -rf dist/temporary/', () => {
+                        exec('cd ./demo && node build.es6 && cd ..', (error, data) => {
+                            console.log(data);
+                        });
                     });
                 })
                 .pipe(bundleFs);
