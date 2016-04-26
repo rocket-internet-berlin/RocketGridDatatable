@@ -21,7 +21,7 @@ interface IDataTableScopeContent {
     uniqueKey: string;
 
     // data pagination
-    pageChanged: (page?: number) => void;
+    pageChanged: (triggeredBySearch?: boolean, page?: number) => void;
     currentPage: number;
     totalItems: number;
     itemsPerPage: number;
@@ -66,25 +66,29 @@ class DataTableDirective implements ng.IDirective {
             .substr(0, 6);
         scopeContent.currentPage = 1;
         scopeContent.itemsPerPage = this.service.getLimit();
-        scopeContent.pageChanged = (page: number): void => {
+        scopeContent.pageChanged = (triggeredBySearch: boolean = false, page: number): void => {
             this.markAsLoading(scopeContent);
+            if (true === triggeredBySearch) {
+                scopeContent.currentPage = page = 1;
+            }
             this.changePage(scopeContent, page || 1);
         };
 
         // receive initial data
         scopeContent.pageChanged();
 
-        let delay: ng.IPromise<any>;
+        let searchDelay: ng.IPromise<any>;
         let oldValue: string;
         $scope.$watch('dataTable.searchValue', (newValue: string) => {
-            if (delay !== undefined) {
-                this.$timeout.cancel(delay);
+            if (searchDelay !== undefined) {
+                this.$timeout.cancel(searchDelay);
             }
-            delay = this.$timeout(() => {
-                if (this.hasSearch(scopeContent)) {
-                    scopeContent.pageChanged(scopeContent.currentPage);
-                } else if (true === this.hasSearchMinValue(oldValue) && false === this.hasSearchMinValue(newValue)) {
-                    scopeContent.pageChanged(scopeContent.currentPage);
+            searchDelay = this.$timeout(() => {
+                if (
+                    this.hasSearch(scopeContent) ||
+                    (true === this.hasSearchMinValue(oldValue) && false === this.hasSearchMinValue(newValue))
+                ) {
+                    scopeContent.pageChanged(true, scopeContent.currentPage);
                 }
                 oldValue = newValue;
             }, 300);
@@ -98,7 +102,7 @@ class DataTableDirective implements ng.IDirective {
         });
 
         $scope.$on('destroy', () => {
-            this.$timeout.cancel(delay);
+            this.$timeout.cancel(searchDelay);
         });
     }
 

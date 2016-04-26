@@ -34,9 +34,7 @@ export class DataTableSortingHelper {
             this.service.getSorting().forEach((sortingElement: rocketGridDatatable.ISortingParameter) => {
                 if (sortingElement.column === column.data('sort')) {
                     column.addClass(
-                        sortingElement.direction === ASCENDING
-                            ? SORTABLE_CLASS_ASCENDING
-                            : SORTABLE_CLASS_DESCENDING
+                        sortingElement.direction === ASCENDING ? SORTABLE_CLASS_ASCENDING : SORTABLE_CLASS_DESCENDING
                     );
                 }
             });

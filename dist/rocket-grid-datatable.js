@@ -31,33 +31,37 @@ var DataTableDirective = (function () {
             .substr(0, 6);
         scopeContent.currentPage = 1;
         scopeContent.itemsPerPage = this.service.getLimit();
-        scopeContent.pageChanged = function (page) {
+        scopeContent.pageChanged = function (triggeredBySearch, page) {
+            if (triggeredBySearch === void 0) { triggeredBySearch = false; }
             _this.markAsLoading(scopeContent);
+            if (true === triggeredBySearch) {
+                scopeContent.currentPage = page = 1;
+            }
             _this.changePage(scopeContent, page || 1);
         };
         // receive initial data
         scopeContent.pageChanged();
-        var delay;
-        $scope.$watch('dataTable.searchValue', function (newValue, oldValue) {
-            if (delay !== undefined) {
-                _this.$timeout.cancel(delay);
+        var searchDelay;
+        var oldValue;
+        $scope.$watch('dataTable.searchValue', function (newValue) {
+            if (searchDelay !== undefined) {
+                _this.$timeout.cancel(searchDelay);
             }
-            delay = _this.$timeout(function () {
-                if (_this.hasSearch(scopeContent)) {
-                    scopeContent.pageChanged(scopeContent.currentPage);
+            searchDelay = _this.$timeout(function () {
+                if (_this.hasSearch(scopeContent) ||
+                    (true === _this.hasSearchMinValue(oldValue) && false === _this.hasSearchMinValue(newValue))) {
+                    scopeContent.pageChanged(true, scopeContent.currentPage);
                 }
-                else if (true === _this.hasSearchMinValue(oldValue) && false === _this.hasSearchMinValue(newValue)) {
-                    scopeContent.pageChanged(scopeContent.currentPage);
-                }
+                oldValue = newValue;
             }, 300);
-        });
-        $scope.$on('destroy', function () {
-            _this.$timeout.cancel(delay);
         });
         $scope.$on(events_1.EVENT_REFRESH_DATA_TABLE_PREFIX + scopeContent.uniqueKey, function (event, payload) {
             var page = (payload && 0 < payload.page) ? payload.page : scopeContent.currentPage;
             _this.markAsLoading(scopeContent);
             _this.changePage(scopeContent, page);
+        });
+        $scope.$on('destroy', function () {
+            _this.$timeout.cancel(searchDelay);
         });
     };
     DataTableDirective.prototype.markAsLoading = function (scope, asLoading) {
@@ -147,9 +151,7 @@ var DataTableSortingHelper = (function () {
             });
             _this.service.getSorting().forEach(function (sortingElement) {
                 if (sortingElement.column === column.data('sort')) {
-                    column.addClass(sortingElement.direction === ASCENDING
-                        ? SORTABLE_CLASS_ASCENDING
-                        : SORTABLE_CLASS_DESCENDING);
+                    column.addClass(sortingElement.direction === ASCENDING ? SORTABLE_CLASS_ASCENDING : SORTABLE_CLASS_DESCENDING);
                 }
             });
         });
@@ -214,7 +216,7 @@ module.run(['$templateCache', function ($templateCache) {
     '\n' +
     '<paging class="pull-right"\n' +
     '        data-page="dataTable.currentPage"\n' +
-    '        data-paging-action="dataTable.pageChanged(page)"\n' +
+    '        data-paging-action="dataTable.pageChanged(false, page)"\n' +
     '        data-page-size="dataTable.itemsPerPage"\n' +
     '        data-total="dataTable.totalItems"\n' +
     '        data-adjacent="1"\n' +
