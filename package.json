@@ -22,7 +22,7 @@
     "Konrad Cerny <konrad.cerny@rocket-internet.de>",
     "Florian Topf <florian.topf@rocket-internet.de>"
   ],
-  "license": "MIT",
+  "license": "GPL",
   "bugs": {
     "url": "https://github.com/rocket-internet-berlin/RocketGridDatatable/issues"
   },
