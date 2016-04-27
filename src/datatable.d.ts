@@ -1,4 +1,5 @@
-declare module rocketGridDatatable {
+declare module 'rocketGridDatatable' {
+
     export interface IDataTableService {
         getAll(
             sort: IGetAllSortingParameter,

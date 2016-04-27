@@ -1,6 +1,12 @@
 'use strict';
 
-export default class UserService implements rocketGridDatatable.IDataTableService {
+import {
+    IDataTableService,
+    IDataTableResponse,
+    IGetAllSortingParameter
+} from 'rocketGridDatatable';
+
+export default class UserService implements IDataTableService {
     static $inject: string[] = [
         '$q',
         '$filter',
@@ -62,12 +68,12 @@ export default class UserService implements rocketGridDatatable.IDataTableServic
     constructor(private $q: ng.IQService, private $filter: ng.IFilterService) {}
 
     public getAll (
-        sorting: rocketGridDatatable.IGetAllSortingParameter,
+        sorting: IGetAllSortingParameter,
         limit: number,
         offset: number,
         search: string,
         additionalQueryParameters: {}
-    ): ng.IPromise<rocketGridDatatable.IDataTableResponse<any>> {
+    ): ng.IPromise<IDataTableResponse<any>> {
         let items: any[] = (search) ? this.$filter('filter')(this.users, search) : this.users;
         let total = items.length;
 
@@ -75,7 +81,7 @@ export default class UserService implements rocketGridDatatable.IDataTableServic
             return items[i + offset];
         });
 
-        let result: rocketGridDatatable.IDataTableResponse<any> = {
+        let result: IDataTableResponse<any> = {
             items: items,
             recordsTotal: total,
             offset: offset,

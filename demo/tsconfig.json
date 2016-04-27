@@ -5,6 +5,7 @@
         "outDir": "dist"
     },
     "files": [
+        "../typings/main.d.ts",
         "../src/datatable.d.ts",
         "../dist/basePresentationService.ts",
         "../dist/events.ts",

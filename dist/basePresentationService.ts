@@ -1,13 +1,21 @@
 const DEFAULT_OFFSET = 0;
 
-export class BasePresentationService implements rocketGridDatatable.IPresentationService {
-    public items: ng.IPromise<rocketGridDatatable.IDataTableResponse<any>>;
-    public service: rocketGridDatatable.IDataTableService;
+import {
+    IPresentationService,
+    IDataTableResponse,
+    IDataTableService,
+    ISortingParameter,
+    IGetAllSortingParameter
+} from 'rocketGridDatatable';
+
+export class BasePresentationService implements IPresentationService {
+    public items: ng.IPromise<IDataTableResponse<any>>;
+    public service: IDataTableService;
 
     private limit: number;
     private offset: number = DEFAULT_OFFSET;
     private search: string;
-    private sorting: rocketGridDatatable.IGetAllSortingParameter = [];
+    private sorting: IGetAllSortingParameter = [];
 
     public constructor (paginationLimitPerPage: number) {
         this.limit = paginationLimitPerPage;
@@ -15,12 +23,12 @@ export class BasePresentationService implements rocketGridDatatable.IPresentatio
     }
 
     public getAll (
-        sorting: rocketGridDatatable.IGetAllSortingParameter,
+        sorting: IGetAllSortingParameter,
         limit: number,
         offset: number,
         search: string,
         additionalQueryParameters: {}
-    ): ng.IPromise<rocketGridDatatable.IDataTableResponse<any>> {
+    ): ng.IPromise<IDataTableResponse<any>> {
         this.setSearch(search);
         this.setSorting(sorting);
         this.setLimit(limit);
@@ -39,26 +47,26 @@ export class BasePresentationService implements rocketGridDatatable.IPresentatio
 
     public addSorting (columnName: string, direction: 'asc' | 'desc'): void {
         this.removeSorting(columnName);
-        let newSorting: rocketGridDatatable.ISortingParameter = {
+        let newSorting: ISortingParameter = {
             column: columnName,
             direction: direction,
         };
 
-        let sorting: rocketGridDatatable.IGetAllSortingParameter = this.getSorting();
+        let sorting: IGetAllSortingParameter = this.getSorting();
         sorting.push(newSorting);
 
         this.setSorting(sorting);
     }
 
     public removeSorting (columnName: string): void {
-        let newSorting = <rocketGridDatatable.IGetAllSortingParameter>this.getSorting().filter(
-            (sortingParam: rocketGridDatatable.ISortingParameter) => sortingParam.column !== columnName
+        let newSorting = <IGetAllSortingParameter>this.getSorting().filter(
+            (sortingParam: ISortingParameter) => sortingParam.column !== columnName
         );
 
         this.setSorting(newSorting);
     }
 
-    public getDefaultSorting (): rocketGridDatatable.IGetAllSortingParameter {
+    public getDefaultSorting (): IGetAllSortingParameter {
         return [];
     }
 
@@ -66,7 +74,7 @@ export class BasePresentationService implements rocketGridDatatable.IPresentatio
         return this.search;
     }
 
-    public getSorting (): rocketGridDatatable.IGetAllSortingParameter {
+    public getSorting (): IGetAllSortingParameter {
         return this.sorting;
     }
 
@@ -82,7 +90,7 @@ export class BasePresentationService implements rocketGridDatatable.IPresentatio
         this.search = search;
     }
 
-    private setSorting (sorting: rocketGridDatatable.IGetAllSortingParameter): void {
+    private setSorting (sorting: IGetAllSortingParameter): void {
         this.sorting = sorting;
     }
 

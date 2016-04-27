@@ -1,5 +1,6 @@
 'use strict';
 
+import { IDataTableResponse, IPresentationService } from 'rocketGridDatatable'
 import { EVENT_PAGE_CHANGED_DATA_TABLE, EVENT_REFRESH_DATA_TABLE_PREFIX } from '../dist/events';
 import { DataTableSortingHelper } from './datatable.helper';
 
@@ -9,7 +10,7 @@ interface IDataTableScopeContent {
 
     // initial scope
     additionalQueryParameters: {};
-    data: rocketGridDatatable.IDataTableResponse<any>;
+    data: IDataTableResponse<any>;
     serviceName: string;
 
     // search
@@ -32,7 +33,7 @@ interface IDataTableScope extends ng.IScope {
 }
 
 class DataTableDirective implements ng.IDirective {
-    private service: rocketGridDatatable.IPresentationService;
+    private service: IPresentationService;
     private $scope: IDataTableScope;
 
     constructor (
@@ -123,7 +124,7 @@ class DataTableDirective implements ng.IDirective {
             this.hasSearch(scopeContent) ? scopeContent.searchValue : '',
             additionalQueryParameters
         ).then(
-            (payload: rocketGridDatatable.IDataTableResponse<any>) => {
+            (payload: IDataTableResponse<any>) => {
                 scopeContent.data = payload;
                 scopeContent.totalItems = payload.recordsTotal;
             }
