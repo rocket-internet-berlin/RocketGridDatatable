@@ -1,5 +1,7 @@
 'use strict';
 
+import { IPresentationService, ISortingParameter } from 'rocketGridDatatable';
+
 const ASCENDING: 'asc' | 'desc' = 'asc';
 const DESCENDING: 'asc' | 'desc' = 'desc';
 const SORTABLE_CLASS: string = 'sortable';
@@ -13,7 +15,7 @@ const SORTABLE_CLASS_DESCENDING: string = 'sortable-' + DESCENDING;
 export class DataTableSortingHelper {
     constructor (
         protected sortableColumns: ng.IAugmentedJQuery,
-        protected service: rocketGridDatatable.IPresentationService,
+        protected service: IPresentationService,
         protected pageChangeCallback: Function
     ) {}
 
@@ -31,7 +33,7 @@ export class DataTableSortingHelper {
                 this.pageChangeCallback();
             });
 
-            this.service.getSorting().forEach((sortingElement: rocketGridDatatable.ISortingParameter) => {
+            this.service.getSorting().forEach((sortingElement: ISortingParameter) => {
                 if (sortingElement.column === column.data('sort')) {
                     column.addClass(
                         sortingElement.direction === ASCENDING ? SORTABLE_CLASS_ASCENDING : SORTABLE_CLASS_DESCENDING
