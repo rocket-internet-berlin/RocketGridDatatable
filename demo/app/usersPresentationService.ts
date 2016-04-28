@@ -2,8 +2,7 @@
 
 import {
     IDataTableService,
-    IGetAllSortingParameter,
-    ISortingParameter
+    IGetAllSortingParameter
 } from 'rocketGridDatatable';
 
 import { BasePresentationService } from '../../dist/basePresentationService';
