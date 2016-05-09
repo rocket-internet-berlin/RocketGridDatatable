@@ -6,7 +6,7 @@
     "Konrad Cerny <konrad.cerny@rocket-internet.de>",
     "Florian Topf <florian.topf@rocket-internet.de>"
   ],
-  "license": "GPL-3.0",
+  "license": "MIT",
   "keywords": [
     "grid",
     "datatable",
