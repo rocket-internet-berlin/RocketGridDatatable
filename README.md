@@ -1,5 +1,5 @@
 # Rocket Grid Datatable
-AngularJS directive adds interaction controls as server side pagination, search and sorting to you tables.
+AngularJS directive adds interaction controls as server side pagination, search and sorting to your tables. Directive is implemented in TypeScript. For the implementation please follow below instruction.
 
 ## Contributing
 Everyone is more than welcome to contribute. Please do not forget on each change to recreate and commit dist folder.
