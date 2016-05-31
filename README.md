@@ -66,6 +66,11 @@ Responsibility of the service is:
 ```javascript
 'use strict';
 
+import {
+    IDataTableService,
+    IGetAllSortingParameter
+} from 'rocketGridDatatable';
+
 import { BasePresentationService } from '__PATH_TO_DIRECTIVE__/dist/basePresentationService';
 
 const PAGINATION_LIMIT_PER_PAGE = 5;
@@ -75,13 +80,13 @@ export default class UserPresentationService extends BasePresentationService {
         'UserService', // <-- this is dependent service
     ];
 
-    constructor (service: rocketGridDatatable.IDataTableService) {
+    constructor (service: IDataTableService) {
         super(PAGINATION_LIMIT_PER_PAGE); // <-- this is pagination limit
 
         this.service = service;
     }
 
-    public getDefaultSorting (): rocketGridDatatable.IGetAllSortingParameter {
+    public getDefaultSorting (): IGetAllSortingParameter {
         return [{ column: 'email', direction: 'asc' }]; // <-- this is default sorting
     }
 }
@@ -90,14 +95,20 @@ export default class UserPresentationService extends BasePresentationService {
 
 **Step 5:**
 
-Create a kind of repository service which implements `rocketGridDatatable.IDataTableService`.
+Create a kind of repository service which implements `IDataTableService`.
 
 *Example:*
 
 ```javascript
 'use strict';
 
-export default class UserService implements rocketGridDatatable.IDataTableService {
+import {
+    IDataTableService,
+    IGetAllSortingParameter,
+    IDataTableResponse
+} from 'rocketGridDatatable';
+
+export default class UserService implements IDataTableService {
     static $inject: string[] = [
         '$resource',
     ];
@@ -105,12 +116,12 @@ export default class UserService implements rocketGridDatatable.IDataTableServic
     constructor(private $resource: ng.IResourceService) {}
 
     public getAll (
-        sorting: rocketGridDatatable.IGetAllSortingParameter,
+        sorting: IGetAllSortingParameter,
         limit: number,
         offset: number,
         search: string,
         additionalQueryParameters: {}
-    ): ng.IPromise<rocketGridDatatable.IDataTableResponse<any>> {
+    ): ng.IPromise<IDataTableResponse<any>> {
         let users = this.$resource('api_url').get(
             angular.extend({
                 limit: limit,
